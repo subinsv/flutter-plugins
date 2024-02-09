@@ -61,7 +61,7 @@ class WebviewImpl extends Webview {
   }
 
   bool notifyUrlChanged(String url) {
-    if(_onUrlRequestCallback != null) {
+    if (_onUrlRequestCallback != null) {
       return _onUrlRequestCallback!(url);
     } else {
       return true;
@@ -84,7 +84,7 @@ class WebviewImpl extends Webview {
   @override
   void registerJavaScriptMessageHandler(
       String name, JavaScriptMessageHandler handler) {
-    if (!Platform.isMacOS) {
+    if (!Platform.isMacOS && !Platform.isLinux) {
       return;
     }
     assert(!_closed);
@@ -123,7 +123,7 @@ class WebviewImpl extends Webview {
   }
 
   @override
-  void launch(String url, {bool triggerOnUrlRequestEvent=true}) async {
+  void launch(String url, {bool triggerOnUrlRequestEvent = true}) async {
     await channel.invokeMethod("launch", {
       "url": url,
       "viewId": viewId,
@@ -201,7 +201,7 @@ class WebviewImpl extends Webview {
   }
 
   @override
-  Future<Map<dynamic,dynamic>?> getPositionalParameters() async {
+  Future<Map<dynamic, dynamic>?> getPositionalParameters() async {
     return await channel.invokeMethod("getPositionalParameters", {
       "viewId": viewId,
     });
@@ -243,7 +243,8 @@ class WebviewImpl extends Webview {
   }
 
   @override
-  void removeOnWebMessageReceivedCallback(OnWebMessageReceivedCallback callback) {
+  void removeOnWebMessageReceivedCallback(
+      OnWebMessageReceivedCallback callback) {
     _onWebMessageReceivedCallbacks.remove(callback);
   }
 
