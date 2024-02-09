@@ -213,14 +213,12 @@ static void webview_window_plugin_handle_method_call(
     }
 
     auto name = fl_value_get_int(fl_value_lookup_string(args, "name"));
-    // Obtain the WebView associated with the given window_id
-    auto* web_view = self->windows->at(window_id);
-    
-    auto* user_content_manager = webkit_web_view_get_user_content_manager(web_view);
+
+    auto* user_content_manager = webkit_web_view_get_user_content_manager(self->windows->at(window_id));
     if (!user_content_manager) {
         // Create a user content manager if it doesn't exist
         user_content_manager = webkit_user_content_manager_new();
-        webkit_web_view_set_user_content_manager(web_view, user_content_manager);
+        webkit_web_view_set_user_content_manager(self->windows->at(window_id), user_content_manager);
     }
 
     // Register a script message handler with the specified name
