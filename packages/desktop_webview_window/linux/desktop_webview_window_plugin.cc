@@ -200,6 +200,7 @@ static void webview_window_plugin_handle_method_call(
     auto *js = fl_value_get_string(fl_value_lookup_string(args, "javaScriptString"));
     self->windows->at(window_id)->EvaluateJavaScript(js, method_call);
   } else if (strcmp(method, "registerJavaScripInterface") == 0) {
+    g_print("registerJavaScripInterface");
     auto *args = fl_method_call_get_args(method_call);
     if (fl_value_get_type(args) != FL_VALUE_TYPE_MAP) {
       fl_method_call_respond_error(method_call, "0", "evaluateJavaScript args is not map", nullptr, nullptr);
