@@ -213,20 +213,17 @@ static void webview_window_plugin_handle_method_call(
     }
 
     auto name = fl_value_get_int(fl_value_lookup_string(args, "name"));
+   // Get the WebContext associated with the WebView
+    auto* context = webkit_web_view_get_context(self->windows->at(window_id));
 
-    auto* user_content_manager = webkit_web_view_get_user_content_manager(self->windows->at(window_id));
-    if (!user_content_manager) {
-        // Create a user content manager if it doesn't exist
-        user_content_manager = webkit_user_content_manager_new();
-        webkit_web_view_set_user_content_manager(self->windows->at(window_id), user_content_manager);
-    }
-
-    // Register a script message handler with the specified name
+    auto* user_content_manager = webkit_web_context_get_user_content_manager(context);
+ // Register a script message handler with the specified name
     webkit_user_content_manager_register_script_message_handler(user_content_manager, name);
 
     // Connect the signal for receiving messages
     g_signal_connect(user_content_manager, ("script-message-received::" + std::string(name)).c_str(),
                      G_CALLBACK(script_message_received), nullptr);
+    fl_method_call_respond_success(method_call, nullptr);
 
   }
    else {
