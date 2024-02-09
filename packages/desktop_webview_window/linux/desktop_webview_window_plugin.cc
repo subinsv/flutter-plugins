@@ -234,7 +234,18 @@ static void webview_window_plugin_handle_method_call(
 }
 
 void script_message_received(WebKitUserContentManager* manager, WebKitJavascriptResult* message, gpointer data) {
-  
+  JSGlobalContextRef context = webkit_javascript_result_get_global_context(message);
+  JSValueRef value = webkit_javascript_result_get_value(message);
+
+  // Convert the JavaScript value to a string
+  JSStringRef string_ref = JSValueToStringCopy(context, value, nullptr);
+  char* message_str = JSStringCopyUTF8CString(string_ref);
+  JSStringRelease(string_ref);
+
+  // Print the received message
+  g_print("Received message from JavaScript: %s\n", message_str);
+
+  g_free(message_str);
 }
 
 static void webview_window_plugin_dispose(GObject *object) {
