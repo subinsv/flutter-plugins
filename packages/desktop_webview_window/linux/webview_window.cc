@@ -37,8 +37,8 @@ namespace
 void handle_script_message(WebKitUserContentManager* manager, WebKitJavascriptResult* message, gpointer data) {
   printf("handling handle_script_message");
 
-  auto *window = static_cast<WebviewWindow *>(data);
-  window->onJavaScriptMessage("test1","testa");
+  // auto *window = static_cast<WebviewWindow *>(data);
+  // window->onJavaScriptMessage("test1","testa");
 //  JSGlobalContextRef context = webkit_javascript_result_get_global_context(message);
 //   JSValueRef value = webkit_javascript_result_get_value(message);
 
