@@ -214,7 +214,7 @@ void WebviewWindow::RegisterJavaScripInterface(const char *name)
 
   std::string handlerName(name);
   g_signal_connect(manager, signal_name.c_str(),
-                  G_CALLBACK(+[](WebKitUserContentManager* content_manager, WebKitJavascriptResult* message, gpointer data)
+                  G_CALLBACK([=](WebKitUserContentManager* content_manager, WebKitJavascriptResult* message, gpointer data)
                              {
                                auto *window = static_cast<WebviewWindow *>(data);
                                JSCValue *value = webkit_javascript_result_get_js_value(message);
