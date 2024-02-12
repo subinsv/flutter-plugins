@@ -215,7 +215,7 @@ static void webview_window_plugin_handle_method_call(
     }
 
     auto name = fl_value_get_string(fl_value_lookup_string(args, "name"));
-    auto *manager = webkit_web_view_get_user_content_manager(self->windows->at(window_id)->getWebView()->getContext());
+    auto *manager = webkit_web_view_get_user_content_manager(self->windows->at(window_id)->web_view->getContext());
     g_signal_connect (manager, ("script-message-received::" + std::string(name)).c_str(),
                   G_CALLBACK (handle_script_message), NULL);
     webkit_user_content_manager_register_script_message_handler(manager, name);
