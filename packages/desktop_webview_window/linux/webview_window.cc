@@ -225,7 +225,7 @@ void WebviewWindow::OnLoadChanged(WebKitLoadEvent load_event)
   }
 }
 
-void WebviewWindow::RegisterJavaScripInterface()
+void WebviewWindow::RegisterJavaScripInterface(const char *name)
 {
   auto *manager = webkit_web_view_get_user_content_manager(WEBKIT_WEB_VIEW(webview_));
     g_signal_connect (manager, ("script-message-received::" + std::string(name)).c_str(),
