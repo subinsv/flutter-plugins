@@ -211,20 +211,21 @@ void WebviewWindow::RegisterJavaScripInterface(const char *name)
 {
   auto *manager = webkit_web_view_get_user_content_manager(WEBKIT_WEB_VIEW(webview_));
 
+    // Create a lambda function to handle the signal
+    auto handleScriptMessage = [this, name](WebKitUserContentManager* content_manager, WebKitJavascriptResult* message, gpointer data)
+    {
+        auto *window = static_cast<WebviewWindow *>(data);
+        JSCValue *value = webkit_javascript_result_get_js_value(message);
+
+        auto *args = fl_value_new_map();
+        fl_value_set(args, fl_value_new_string("id"), fl_value_new_int(window->window_id_));
+        fl_value_set(args, fl_value_new_string("name"), fl_value_new_string(name));
+        fl_value_set(args, fl_value_new_string("body"), fl_value_new_string(jsc_value_to_string(value)));
+        fl_method_channel_invoke_method(FL_METHOD_CHANNEL(window->method_channel_), "onJavaScriptMessage", args, nullptr, nullptr, nullptr);
+    };
+
     g_signal_connect (manager, ("script-message-received::" + std::string(name)).c_str(),
-                  G_CALLBACK (+[=](WebKitUserContentManager* content_manager, WebKitJavascriptResult* message, gpointer data)
-                              {
-                                auto *window = static_cast<WebviewWindow *>(data);
-                                JSCValue *value = webkit_javascript_result_get_js_value(message);
-                              
-                                auto *args = fl_value_new_map();
-                                fl_value_set(args, fl_value_new_string("id"), fl_value_new_int(window->window_id_));
-                                fl_value_set(args, fl_value_new_string("name"), fl_value_new_string(name));
-                                fl_value_set(args, fl_value_new_string("body"), fl_value_new_string(jsc_value_to_string(value)));
-                                fl_method_channel_invoke_method(
-                                    FL_METHOD_CHANNEL(window->method_channel_), "onJavaScriptMessage", args,
-                                    nullptr, nullptr, nullptr);
-                              }), this);
+                  G_CALLBACK (handleScriptMessage), this);
 
     webkit_user_content_manager_register_script_message_handler(manager, name);
 }
