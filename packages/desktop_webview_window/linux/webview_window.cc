@@ -38,7 +38,7 @@ void handle_script_message(WebKitUserContentManager* manager, WebKitJavascriptRe
   printf("handling handle_script_message");
 
   auto *window = static_cast<WebviewWindow *>(data);
-  window->onJavaScriptMessage("test1","testa");
+  window->onJavaScriptMessage("test1","testa",arg);
 
 //  JSGlobalContextRef context = webkit_javascript_result_get_global_context(message);
 //   JSValueRef value = webkit_javascript_result_get_value(message);
@@ -194,9 +194,9 @@ void WebviewWindow::Close()
   gtk_window_close(GTK_WINDOW(window_));
 }
 
- void WebviewWindow::onJavaScriptMessage(const char *name, const char *body)
+ void WebviewWindow::onJavaScriptMessage(const char *name, const char *body, gpointer data)
   {
-    auto *window = static_cast<WebviewWindow *>(arg);
+    auto *window = static_cast<WebviewWindow *>(data);
     printf("onJavascriptMessage after handle %s", name);
     auto *args = fl_value_new_map();
     fl_value_set(args, fl_value_new_string("id"), fl_value_new_int(window->window_id_));
