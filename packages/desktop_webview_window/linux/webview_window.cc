@@ -222,11 +222,10 @@ void WebviewWindow::RegisterJavaScripInterface(const char *name)
                                 auto *args = fl_value_new_map();
                                 fl_value_set(args, fl_value_new_string("id"), fl_value_new_int(window->window_id_));
                                 fl_value_set(args, fl_value_new_string("name"), fl_value_new_string("test"));
-                                fl_value_set(args, fl_value_new_string("body"), fl_value_new_string(vjsc_value_to_string(value)));
+                                fl_value_set(args, fl_value_new_string("body"), fl_value_new_string(jsc_value_to_string(value)));
                                 fl_method_channel_invoke_method(
                                     FL_METHOD_CHANNEL(window->method_channel_), "onJavaScriptMessage", args,
                                     nullptr, nullptr, nullptr);
-                                g_free(message_str);
                               }), this);
 
     webkit_user_content_manager_register_script_message_handler(manager, name);
