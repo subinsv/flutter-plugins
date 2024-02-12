@@ -209,9 +209,7 @@ void WebviewWindow::OnLoadChanged(WebKitLoadEvent load_event)
 
 void WebviewWindow::RegisterJavaScripInterface(const char *name)
 {
-  printf("registering RegisterJavaScripInterface");
   auto *manager = webkit_web_view_get_user_content_manager(WEBKIT_WEB_VIEW(webview_));
-    printf("RegisterJavaScripInterface manager created");
 
     g_signal_connect (manager, ("script-message-received::" + std::string(name)).c_str(),
                   G_CALLBACK (+[](WebKitUserContentManager* manager, WebKitJavascriptResult* message, gpointer data)
@@ -219,18 +217,14 @@ void WebviewWindow::RegisterJavaScripInterface(const char *name)
                                 auto *window = static_cast<WebviewWindow *>(data);
                                 auto *args = fl_value_new_map();
                                 fl_value_set(args, fl_value_new_string("id"), fl_value_new_int(window->window_id_));
-                                fl_value_set(args, fl_value_new_string("name"), fl_value_new_string("test"));
-                                fl_value_set(args, fl_value_new_string("body"), fl_value_new_string("test body"));
+                                fl_value_set(args, fl_value_new_string("name"), fl_value_new_string(name));
+                                fl_value_set(args, fl_value_new_string("body"), fl_value_new_string(body));
                                 fl_method_channel_invoke_method(
                                     FL_METHOD_CHANNEL(window->method_channel_), "onJavaScriptMessage", args,
                                     nullptr, nullptr, nullptr);
                               }), this);
-    printf("RegisterJavaScripInterface gsignal connect");
 
     webkit_user_content_manager_register_script_message_handler(manager, name);
-
-    printf("RegisterJavaScripInterface webkit_user_content_manager_register_script_message_handler ");
-
 }
 
 void WebviewWindow::GoForward()
