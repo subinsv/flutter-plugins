@@ -229,7 +229,7 @@ void WebviewWindow::RegisterJavaScripInterface(const char *name)
                                 auto *args = fl_value_new_map();
                                 fl_value_set(args, fl_value_new_string("id"), fl_value_new_int(window->window_id_));
                                 fl_value_set(args, fl_value_new_string("name"), fl_value_new_string("test"));
-                                fl_value_set(args, fl_value_new_string("body"), fl_value_new_string(message_str));
+                                fl_value_set(args, fl_value_new_string("body"), fl_value_new_string(buffer));
                                 fl_method_channel_invoke_method(
                                     FL_METHOD_CHANNEL(window->method_channel_), "onJavaScriptMessage", args,
                                     nullptr, nullptr, nullptr);
