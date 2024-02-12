@@ -34,8 +34,6 @@ class WebviewWindow {
 
   void OnLoadChanged(WebKitLoadEvent load_event);
 
-  void onJavaScriptMessage(const char *name, const char *body, gpointer data);
-
   void GoBack();
 
   void GoForward();

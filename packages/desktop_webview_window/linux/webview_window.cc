@@ -34,34 +34,6 @@ namespace
     return GTK_WIDGET(web_view);
   }
 
-void handle_script_message(WebKitUserContentManager* manager, WebKitJavascriptResult* message, gpointer data) {
-  printf("handling handle_script_message");
-
-  auto *window = static_cast<WebviewWindow *>(data);
-  window->onJavaScriptMessage("test1","testa",data);
-
-//  JSGlobalContextRef context = webkit_javascript_result_get_global_context(message);
-//   JSValueRef value = webkit_javascript_result_get_value(message);
-
-
-//     auto *args = fl_value_new_map();
-//     fl_value_set(args, fl_value_new_string("id"), fl_value_new_int(window_id_),"from js body");
-//     fl_method_channel_invoke_method(
-//         FL_METHOD_CHANNEL(method_channel_), "onJavaScriptMessage", args,
-//         nullptr, nullptr, nullptr);
-
-//     // Convert the JavaScript value to a string
-//     // JSStringRef string_ref = JSValueToStringCopy(context, value, nullptr);
-//     // char* message_str = JSStringCopyUTF8CString(string_ref);
-//     // gsize length = JSStringGetLength(string_ref);
-//     // JSStringRelease(string_ref);
-//     printf("recevied message from javascr");
-//     // Print the received message
-//     // g_print("Received message from JavaScript: %.*s\n", (int)length, message_str);
-
-//     // g_free(message_str);
-}
-
   void on_load_changed(WebKitWebView *web_view,
                        WebKitLoadEvent load_event,
                        gpointer user_data)
@@ -194,20 +166,6 @@ void WebviewWindow::Close()
   gtk_window_close(GTK_WINDOW(window_));
 }
 
- void WebviewWindow::onJavaScriptMessage(const char *name, const char *body, gpointer data)
-  {
-    auto *window = static_cast<WebviewWindow *>(data);
-    printf("onJavascriptMessage after handle %s", name);
-    auto *args = fl_value_new_map();
-    fl_value_set(args, fl_value_new_string("id"), fl_value_new_int(window->window_id_));
-    fl_value_set(args, fl_value_new_string("name"), fl_value_new_string("test"));
-    fl_value_set(args, fl_value_new_string("body"), fl_value_new_string("test body"));
-    printf("invoke onJavascriptMessage to flutter");
-    fl_method_channel_invoke_method(
-        FL_METHOD_CHANNEL(window->method_channel_), "onJavaScriptMessage", args,
-        nullptr, nullptr, nullptr);
-  }
-
 void WebviewWindow::OnLoadChanged(WebKitLoadEvent load_event)
 {
   // notify history changed event.
@@ -256,7 +214,17 @@ void WebviewWindow::RegisterJavaScripInterface(const char *name)
     printf("RegisterJavaScripInterface manager created");
 
     g_signal_connect (manager, ("script-message-received::" + std::string(name)).c_str(),
-                  G_CALLBACK (handle_script_message), NULL);
+                  G_CALLBACK (+[](WebKitUserContentManager* manager, WebKitJavascriptResult* message, gpointer data)
+                              {
+                                auto *window = static_cast<WebviewWindow *>(arg);
+                                auto *args = fl_value_new_map();
+                                fl_value_set(args, fl_value_new_string("id"), fl_value_new_int(window->window_id_));
+                                fl_value_set(args, fl_value_new_string("name"), fl_value_new_string("test"));
+                                fl_value_set(args, fl_value_new_string("body"), fl_value_new_string("test body"));
+                                fl_method_channel_invoke_method(
+                                    FL_METHOD_CHANNEL(window->method_channel_), "onJavaScriptMessage", args,
+                                    nullptr, nullptr, nullptr);
+                              }), this);
     printf("RegisterJavaScripInterface gsignal connect");
 
     webkit_user_content_manager_register_script_message_handler(manager, name);
