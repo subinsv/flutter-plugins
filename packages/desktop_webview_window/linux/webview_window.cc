@@ -35,7 +35,7 @@ namespace
   }
 
 void handle_script_message(WebKitUserContentManager* manager, WebKitJavascriptResult* message, gpointer data) {
-  printf("handling handle_script_message");
+  std::cerr << "handling handle_script_message" << std::endl;
 
   auto *window = static_cast<WebviewWindow *>(data);
   window->onJavaScriptMessage("test","test");
@@ -247,7 +247,7 @@ void WebviewWindow::OnLoadChanged(WebKitLoadEvent load_event)
 
 void WebviewWindow::RegisterJavaScripInterface(const char *name)
 {
-  printf("registering RegisterJavaScripInterface");
+  std::cerr << "registering RegisterJavaScripInterface" << std::endl;
   auto *manager = webkit_web_view_get_user_content_manager(WEBKIT_WEB_VIEW(webview_));
     g_signal_connect (manager, ("script-message-received::" + std::string(name)).c_str(),
                   G_CALLBACK (handle_script_message), NULL);
