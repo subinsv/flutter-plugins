@@ -215,9 +215,7 @@ void WebviewWindow::RegisterJavaScripInterface(const char *name)
                   G_CALLBACK (+[](WebKitUserContentManager* manager, WebKitJavascriptResult* message, gpointer data)
                               {
                                 auto *window = static_cast<WebviewWindow *>(data);
-                                JSGlobalContextRef context = webkit_javascript_result_get_global_context(message);
                                 JSCValue *value = webkit_javascript_result_get_js_value(message);
-
                               
                                 auto *args = fl_value_new_map();
                                 fl_value_set(args, fl_value_new_string("id"), fl_value_new_int(window->window_id_));
