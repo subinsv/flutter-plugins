@@ -35,26 +35,28 @@ namespace
   }
 
 void handle_script_message(WebKitUserContentManager* manager, WebKitJavascriptResult* message, gpointer data) {
- JSGlobalContextRef context = webkit_javascript_result_get_global_context(message);
-  JSValueRef value = webkit_javascript_result_get_value(message);
+   auto *window = static_cast<WebviewWindow *>(data);
+  window->onJavaScriptMessage("test","test");
+//  JSGlobalContextRef context = webkit_javascript_result_get_global_context(message);
+//   JSValueRef value = webkit_javascript_result_get_value(message);
 
 
-    auto *args = fl_value_new_map();
-    fl_value_set(args, fl_value_new_string("id"), fl_value_new_int(window_id_),"from js body");
-    fl_method_channel_invoke_method(
-        FL_METHOD_CHANNEL(method_channel_), "onJavaScriptMessage", args,
-        nullptr, nullptr, nullptr);
+//     auto *args = fl_value_new_map();
+//     fl_value_set(args, fl_value_new_string("id"), fl_value_new_int(window_id_),"from js body");
+//     fl_method_channel_invoke_method(
+//         FL_METHOD_CHANNEL(method_channel_), "onJavaScriptMessage", args,
+//         nullptr, nullptr, nullptr);
 
-    // Convert the JavaScript value to a string
-    // JSStringRef string_ref = JSValueToStringCopy(context, value, nullptr);
-    // char* message_str = JSStringCopyUTF8CString(string_ref);
-    // gsize length = JSStringGetLength(string_ref);
-    // JSStringRelease(string_ref);
-    printf("recevied message from javascr");
-    // Print the received message
-    // g_print("Received message from JavaScript: %.*s\n", (int)length, message_str);
+//     // Convert the JavaScript value to a string
+//     // JSStringRef string_ref = JSValueToStringCopy(context, value, nullptr);
+//     // char* message_str = JSStringCopyUTF8CString(string_ref);
+//     // gsize length = JSStringGetLength(string_ref);
+//     // JSStringRelease(string_ref);
+//     printf("recevied message from javascr");
+//     // Print the received message
+//     // g_print("Received message from JavaScript: %.*s\n", (int)length, message_str);
 
-    // g_free(message_str);
+//     // g_free(message_str);
 }
 
   void on_load_changed(WebKitWebView *web_view,
@@ -201,6 +203,17 @@ void WebviewWindow::OnLoadChanged(WebKitLoadEvent load_event)
     fl_value_set(args, fl_value_new_string("canGoForward"), fl_value_new_bool(can_go_forward));
     fl_method_channel_invoke_method(
         FL_METHOD_CHANNEL(method_channel_), "onHistoryChanged", args,
+        nullptr, nullptr, nullptr);
+  }
+
+  void WebviewWindow::onJavaScriptMessage(const char *name, const char *body)
+  {
+    auto *args = fl_value_new_map();
+    fl_value_set(args, fl_value_new_string("id"), fl_value_new_int(window_id_));
+    fl_value_set(args, fl_value_new_string("name"), fl_value_new_string(name));
+    fl_value_set(args, fl_value_new_string("body"), fl_value_new_string(""));
+    fl_method_channel_invoke_method(
+        FL_METHOD_CHANNEL(method_channel_), "onJavaScriptMessage", args,
         nullptr, nullptr, nullptr);
   }
 
