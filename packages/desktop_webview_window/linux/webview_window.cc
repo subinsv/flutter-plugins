@@ -191,6 +191,17 @@ void WebviewWindow::Close()
   gtk_window_close(GTK_WINDOW(window_));
 }
 
+ void WebviewWindow::onJavaScriptMessage(const char *name, const char *body)
+  {
+    auto *args = fl_value_new_map();
+    fl_value_set(args, fl_value_new_string("id"), fl_value_new_int(window_id_));
+    fl_value_set(args, fl_value_new_string("name"), fl_value_new_string(name));
+    fl_value_set(args, fl_value_new_string("body"), fl_value_new_string(""));
+    fl_method_channel_invoke_method(
+        FL_METHOD_CHANNEL(method_channel_), "onJavaScriptMessage", args,
+        nullptr, nullptr, nullptr);
+  }
+
 void WebviewWindow::OnLoadChanged(WebKitLoadEvent load_event)
 {
   // notify history changed event.
@@ -203,17 +214,6 @@ void WebviewWindow::OnLoadChanged(WebKitLoadEvent load_event)
     fl_value_set(args, fl_value_new_string("canGoForward"), fl_value_new_bool(can_go_forward));
     fl_method_channel_invoke_method(
         FL_METHOD_CHANNEL(method_channel_), "onHistoryChanged", args,
-        nullptr, nullptr, nullptr);
-  }
-
-  void WebviewWindow::onJavaScriptMessage(const char *name, const char *body)
-  {
-    auto *args = fl_value_new_map();
-    fl_value_set(args, fl_value_new_string("id"), fl_value_new_int(window_id_));
-    fl_value_set(args, fl_value_new_string("name"), fl_value_new_string(name));
-    fl_value_set(args, fl_value_new_string("body"), fl_value_new_string(""));
-    fl_method_channel_invoke_method(
-        FL_METHOD_CHANNEL(method_channel_), "onJavaScriptMessage", args,
         nullptr, nullptr, nullptr);
   }
 
