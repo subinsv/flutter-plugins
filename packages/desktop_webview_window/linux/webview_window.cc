@@ -35,8 +35,15 @@ namespace
   }
 
 void handle_script_message(WebKitUserContentManager* manager, WebKitJavascriptResult* message, gpointer data) {
-//  JSGlobalContextRef context = webkit_javascript_result_get_global_context(message);
-    // JSValueRef value = webkit_javascript_result_get_value(message);
+ JSGlobalContextRef context = webkit_javascript_result_get_global_context(message);
+  JSValueRef value = webkit_javascript_result_get_value(message);
+
+
+    auto *args = fl_value_new_map();
+    fl_value_set(args, fl_value_new_string("id"), fl_value_new_int(window_id_),"from js body");
+    fl_method_channel_invoke_method(
+        FL_METHOD_CHANNEL(method_channel_), "onJavaScriptMessage", args,
+        nullptr, nullptr, nullptr);
 
     // Convert the JavaScript value to a string
     // JSStringRef string_ref = JSValueToStringCopy(context, value, nullptr);
