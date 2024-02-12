@@ -39,8 +39,11 @@ void handle_script_message(WebKitUserContentManager* manager, WebKitJavascriptRe
 
   auto *window = static_cast<WebviewWindow *>(data);
   g_critical("handle_script_message: %p", window);
-
-  // window->onJavaScriptMessage("test1","testa");
+try {
+  window->onJavaScriptMessage("test1","testa");
+}catch(const std::exception& e) {
+  g_critical("handle_script_message: %s", e.what());
+}
 //  JSGlobalContextRef context = webkit_javascript_result_get_global_context(message);
 //   JSValueRef value = webkit_javascript_result_get_value(message);
 
