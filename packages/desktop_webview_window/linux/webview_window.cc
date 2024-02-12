@@ -212,7 +212,7 @@ void WebviewWindow::RegisterJavaScripInterface(const char *name)
   auto *manager = webkit_web_view_get_user_content_manager(WEBKIT_WEB_VIEW(webview_));
 
     // Create a lambda function to handle the signal
-    auto handleScriptMessage = [this, name](WebKitUserContentManager* content_manager, WebKitJavascriptResult* message, gpointer data)
+    auto handleScriptMessage = [name](WebKitUserContentManager* content_manager, WebKitJavascriptResult* message, gpointer data)
     {
         auto *window = static_cast<WebviewWindow *>(data);
         JSCValue *value = webkit_javascript_result_get_js_value(message);
