@@ -43,7 +43,7 @@ void handle_script_message(WebKitUserContentManager* manager, WebKitJavascriptRe
     // char* message_str = JSStringCopyUTF8CString(string_ref);
     // gsize length = JSStringGetLength(string_ref);
     // JSStringRelease(string_ref);
-    g_print("recevied message from javascr");
+    printf("recevied message from javascr");
     // Print the received message
     // g_print("Received message from JavaScript: %.*s\n", (int)length, message_str);
 
