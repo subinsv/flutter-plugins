@@ -32,6 +32,24 @@ struct _WebviewWindowPlugin {
 
 G_DEFINE_TYPE(WebviewWindowPlugin, webview_window_plugin, g_object_get_type())
 
+
+void handle_script_message(WebKitUserContentManager* manager, WebKitJavascriptResult* message, gpointer data) {
+ JSGlobalContextRef context = webkit_javascript_result_get_global_context(message);
+    JSValueRef value = webkit_javascript_result_get_value(message);
+
+    // Convert the JavaScript value to a string
+    JSStringRef string_ref = JSValueToStringCopy(context, value, nullptr);
+    // char* message_str = JSStringCopyUTF8CString(string_ref);
+    // gsize length = JSStringGetLength(string_ref);
+    JSStringRelease(string_ref);
+    g_print("recevied message from javascr");
+    // Print the received message
+    // g_print("Received message from JavaScript: %.*s\n", (int)length, message_str);
+
+    // g_free(message_str);
+}
+
+
 // Called when a method call is received from Flutter.
 static void webview_window_plugin_handle_method_call(
     WebviewWindowPlugin *self,
@@ -215,7 +233,7 @@ static void webview_window_plugin_handle_method_call(
     }
 
     auto name = fl_value_get_string(fl_value_lookup_string(args, "name"));
-    auto *manager = webkit_web_view_get_user_content_manager(self->windows->at(window_id)->web_view->getContext());
+    auto *manager = webkit_web_view_get_user_content_manager(webkit_web_view_get_context(self->windows->at(window_id)));
     g_signal_connect (manager, ("script-message-received::" + std::string(name)).c_str(),
                   G_CALLBACK (handle_script_message), NULL);
     webkit_user_content_manager_register_script_message_handler(manager, name);
@@ -226,22 +244,6 @@ static void webview_window_plugin_handle_method_call(
     fl_method_call_respond_not_implemented(method_call, nullptr);
   }
 
-}
-
-void handle_script_message(WebKitUserContentManager* manager, WebKitJavascriptResult* message, gpointer data) {
- JSGlobalContextRef context = webkit_javascript_result_get_global_context(message);
-    JSValueRef value = webkit_javascript_result_get_value(message);
-
-    // Convert the JavaScript value to a string
-    JSStringRef string_ref = JSValueToStringCopy(context, value, nullptr);
-    // char* message_str = JSStringCopyUTF8CString(string_ref);
-    // gsize length = JSStringGetLength(string_ref);
-    JSStringRelease(string_ref);
-    g_print("recevied message from javascr");
-    // Print the received message
-    // g_print("Received message from JavaScript: %.*s\n", (int)length, message_str);
-
-    // g_free(message_str);
 }
 
 static void webview_window_plugin_dispose(GObject *object) {
