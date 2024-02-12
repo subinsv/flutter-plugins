@@ -220,7 +220,7 @@ void WebviewWindow::RegisterJavaScripInterface(const char *name)
                                
                                auto *args = fl_value_new_map();
                                fl_value_set(args, fl_value_new_string("id"), fl_value_new_int(window->window_id_));
-                               fl_value_set(args, fl_value_new_string("name"), fl_value_new_string(name)); // Using the captured 'name' variable here
+                               fl_value_set(args, fl_value_new_string("name"), fl_value_new_string(messageHandlerName)); 
                                fl_value_set(args, fl_value_new_string("body"), fl_value_new_string(jsc_value_to_string(value)));
                                fl_method_channel_invoke_method(
                                    FL_METHOD_CHANNEL(window->method_channel_), "onJavaScriptMessage", args,
