@@ -37,8 +37,8 @@ namespace
 void handle_script_message(WebKitUserContentManager* manager, WebKitJavascriptResult* message, gpointer data) {
   printf("handling handle_script_message");
 
-  // auto *window = static_cast<WebviewWindow *>(data);
-  // window->onJavaScriptMessage("test1","testa");
+  auto *window = static_cast<WebviewWindow *>(data);
+  window->onJavaScriptMessage("test1","testa");
 //  JSGlobalContextRef context = webkit_javascript_result_get_global_context(message);
 //   JSValueRef value = webkit_javascript_result_get_value(message);
 
@@ -195,10 +195,12 @@ void WebviewWindow::Close()
 
  void WebviewWindow::onJavaScriptMessage(const char *name, const char *body)
   {
+    printf("onJavascriptMessage after handle")
     auto *args = fl_value_new_map();
     fl_value_set(args, fl_value_new_string("id"), fl_value_new_int(window_id_));
     fl_value_set(args, fl_value_new_string("name"), fl_value_new_string(name));
     fl_value_set(args, fl_value_new_string("body"), fl_value_new_string(body));
+    printf("invoke onJavascriptMessage to flutter")
     fl_method_channel_invoke_method(
         FL_METHOD_CHANNEL(method_channel_), "onJavaScriptMessage", args,
         nullptr, nullptr, nullptr);
