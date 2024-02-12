@@ -197,8 +197,8 @@ void WebviewWindow::Close()
  void WebviewWindow::onJavaScriptMessage(const char *name, const char *body)
   {
     printf("onJavascriptMessage after handle %s", name);
-    // auto *args = fl_value_new_map();
-    // fl_value_set(args, fl_value_new_string("id"), fl_value_new_int(window_id_));
+    auto *args = fl_value_new_map();
+    fl_value_set(args, fl_value_new_string("id"), fl_value_new_int(window_id_));
     // fl_value_set(args, fl_value_new_string("name"), fl_value_new_string(name));
     // fl_value_set(args, fl_value_new_string("body"), fl_value_new_string(body));
     // printf("invoke onJavascriptMessage to flutter");
