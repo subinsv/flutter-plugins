@@ -249,9 +249,16 @@ void WebviewWindow::RegisterJavaScripInterface(const char *name)
 {
   printf("registering RegisterJavaScripInterface");
   auto *manager = webkit_web_view_get_user_content_manager(WEBKIT_WEB_VIEW(webview_));
+    printf("RegisterJavaScripInterface manager created");
+
     g_signal_connect (manager, ("script-message-received::" + std::string(name)).c_str(),
                   G_CALLBACK (handle_script_message), NULL);
+    printf("RegisterJavaScripInterface gsignal connect");
+
     webkit_user_content_manager_register_script_message_handler(manager, name);
+
+    printf("RegisterJavaScripInterface webkit_user_content_manager_register_script_message_handler ");
+
 }
 
 void WebviewWindow::GoForward()
