@@ -41,6 +41,9 @@ class WebviewWindow {
   void Reload();
 
   void StopLoading();
+  
+  void RegisterJavaScripInterface(const char *name);
+
 
   gboolean DecidePolicy(WebKitPolicyDecision *decision,
                         WebKitPolicyDecisionType type);

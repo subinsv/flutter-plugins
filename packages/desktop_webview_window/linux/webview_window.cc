@@ -34,6 +34,22 @@ namespace
     return GTK_WIDGET(web_view);
   }
 
+void handle_script_message(WebKitUserContentManager* manager, WebKitJavascriptResult* message, gpointer data) {
+//  JSGlobalContextRef context = webkit_javascript_result_get_global_context(message);
+    // JSValueRef value = webkit_javascript_result_get_value(message);
+
+    // Convert the JavaScript value to a string
+    // JSStringRef string_ref = JSValueToStringCopy(context, value, nullptr);
+    // char* message_str = JSStringCopyUTF8CString(string_ref);
+    // gsize length = JSStringGetLength(string_ref);
+    // JSStringRelease(string_ref);
+    g_print("recevied message from javascr");
+    // Print the received message
+    // g_print("Received message from JavaScript: %.*s\n", (int)length, message_str);
+
+    // g_free(message_str);
+}
+
   void on_load_changed(WebKitWebView *web_view,
                        WebKitLoadEvent load_event,
                        gpointer user_data)
@@ -51,6 +67,7 @@ namespace
     return window->DecidePolicy(decision, type);
   }
 
+  void 
 }
 
 WebviewWindow::WebviewWindow(
@@ -206,6 +223,14 @@ void WebviewWindow::OnLoadChanged(WebKitLoadEvent load_event)
   default:
     break;
   }
+}
+
+void WebviewWindow::RegisterJavaScripInterface()
+{
+  auto *manager = webkit_web_view_get_user_content_manager(WEBKIT_WEB_VIEW(webview_));
+    g_signal_connect (manager, ("script-message-received::" + std::string(name)).c_str(),
+                  G_CALLBACK (handle_script_message), NULL);
+    webkit_user_content_manager_register_script_message_handler(manager, name);
 }
 
 void WebviewWindow::GoForward()
