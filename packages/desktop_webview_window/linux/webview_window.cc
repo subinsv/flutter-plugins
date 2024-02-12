@@ -38,6 +38,8 @@ void handle_script_message(WebKitUserContentManager* manager, WebKitJavascriptRe
   printf("handling handle_script_message");
 
   auto *window = static_cast<WebviewWindow *>(data);
+  g_critical("handle_script_message: %p", webview);
+
   // window->onJavaScriptMessage("test1","testa");
 //  JSGlobalContextRef context = webkit_javascript_result_get_global_context(message);
 //   JSValueRef value = webkit_javascript_result_get_value(message);
