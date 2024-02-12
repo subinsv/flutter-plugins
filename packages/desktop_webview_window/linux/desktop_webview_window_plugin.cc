@@ -2,6 +2,8 @@
 
 #include <flutter_linux/flutter_linux.h>
 #include <gtk/gtk.h>
+#include <JavaScriptCore/JSValueRef.h>
+#include <JavaScriptCore/JSStringRef.h>
 
 #include <memory>
 #include <cstring>
