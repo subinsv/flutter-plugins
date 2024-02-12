@@ -65,9 +65,7 @@ void handle_script_message(WebKitUserContentManager* manager, WebKitJavascriptRe
   {
     auto *window = static_cast<WebviewWindow *>(user_data);
     return window->DecidePolicy(decision, type);
-  }
-
-  void 
+  } 
 }
 
 WebviewWindow::WebviewWindow(
