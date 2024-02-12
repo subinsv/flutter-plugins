@@ -219,7 +219,11 @@ void WebviewWindow::RegisterJavaScripInterface(const char *name)
                                 JSValueRef value = webkit_javascript_result_get_js_value(message);
 
                                 JSStringRef string_ref = JSValueToStringCopy(context, value, nullptr);
-                                char* message_str = JSStringCopyUTF8CString(string_ref);
+                                size_t maxBufferSize = JSStringGetMaximumUTF8CStringSize(string_ref);
+
+                                char* buffer = (char*)malloc(maxBufferSize);
+                                JSStringGetUTF8CString(string_ref, buffer, maxBufferSize);
+
                                 JSStringRelease(string_ref);
 
                                 auto *args = fl_value_new_map();
