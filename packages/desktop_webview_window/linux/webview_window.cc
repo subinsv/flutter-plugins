@@ -216,7 +216,7 @@ void WebviewWindow::RegisterJavaScripInterface(const char *name)
                               {
                                 auto *window = static_cast<WebviewWindow *>(data);
                                 JSGlobalContextRef context = webkit_javascript_result_get_global_context(message);
-                                JSCValue value = webkit_javascript_result_get_js_value(message);
+                                JSCValue *value = webkit_javascript_result_get_js_value(message);
 
                               
                                 auto *args = fl_value_new_map();
