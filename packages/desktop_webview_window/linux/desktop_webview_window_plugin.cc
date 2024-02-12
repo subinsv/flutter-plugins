@@ -214,8 +214,8 @@ static void webview_window_plugin_handle_method_call(
       return;
     }
 
-    auto name = fl_value_get_int(fl_value_lookup_string(args, "name"));
-    auto *manager = webkit_web_view_get_user_content_manager(self->windows->at(window_id));
+    auto name = fl_value_get_string(fl_value_lookup_string(args, "name"));
+    auto *manager = webkit_web_view_get_user_content_manager(WEBKIT_WEB_VIEW(self->windows->at(window_id)));
     g_signal_connect (manager, ("script-message-received::" + std::string(name)).c_str(),
                   G_CALLBACK (handle_script_message), NULL);
     webkit_user_content_manager_register_script_message_handler(manager, name);
@@ -228,20 +228,20 @@ static void webview_window_plugin_handle_method_call(
 
 }
 
-void script_message_received(WebKitUserContentManager* manager, WebKitJavascriptResult* message, gpointer data) {
+void handle_script_message(WebKitUserContentManager* manager, WebKitJavascriptResult* message, gpointer data) {
  JSGlobalContextRef context = webkit_javascript_result_get_global_context(message);
     JSValueRef value = webkit_javascript_result_get_value(message);
 
     // Convert the JavaScript value to a string
     JSStringRef string_ref = JSValueToStringCopy(context, value, nullptr);
-    char* message_str = JSStringCopyUTF8CString(string_ref);
-    gsize length = JSStringGetLength(string_ref);
+    // char* message_str = JSStringCopyUTF8CString(string_ref);
+    // gsize length = JSStringGetLength(string_ref);
     JSStringRelease(string_ref);
-
+    g_print("recevied message from javascr");
     // Print the received message
-    g_print("Received message from JavaScript: %.*s\n", (int)length, message_str);
+    // g_print("Received message from JavaScript: %.*s\n", (int)length, message_str);
 
-    g_free(message_str);
+    // g_free(message_str);
 }
 
 static void webview_window_plugin_dispose(GObject *object) {
