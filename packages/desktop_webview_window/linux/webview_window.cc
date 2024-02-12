@@ -216,7 +216,7 @@ void WebviewWindow::RegisterJavaScripInterface(const char *name)
     g_signal_connect (manager, ("script-message-received::" + std::string(name)).c_str(),
                   G_CALLBACK (+[](WebKitUserContentManager* manager, WebKitJavascriptResult* message, gpointer data)
                               {
-                                auto *window = static_cast<WebviewWindow *>(arg);
+                                auto *window = static_cast<WebviewWindow *>(data);
                                 auto *args = fl_value_new_map();
                                 fl_value_set(args, fl_value_new_string("id"), fl_value_new_int(window->window_id_));
                                 fl_value_set(args, fl_value_new_string("name"), fl_value_new_string("test"));
