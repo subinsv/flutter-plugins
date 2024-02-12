@@ -8,6 +8,9 @@
 #include <flutter_linux/flutter_linux.h>
 #include <gtk/gtk.h>
 #include <webkit2/webkit2.h>
+#include <JavaScriptCore/JSContextRef.h>
+#include <JavaScriptCore/JSValueRef.h>
+#include <JavaScriptCore/JSStringRef.h>
 #include <functional>
 
 #include <string>
